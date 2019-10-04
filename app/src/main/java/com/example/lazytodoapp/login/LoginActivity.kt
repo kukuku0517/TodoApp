@@ -18,13 +18,14 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
-    companion object{
+    companion object {
         val RC_SIGN_IN = 1000
     }
+
     val TAG = this.javaClass.simpleName
 
 
-    lateinit var mGoogleSignInClient:GoogleSignInClient
+    lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var auth: FirebaseAuth
 
 
@@ -39,6 +40,9 @@ class LoginActivity : AppCompatActivity() {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
         auth = FirebaseAuth.getInstance()
 
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
         mBtnLogin.setOnClickListener {
             signIn()
         }
@@ -83,7 +87,8 @@ class LoginActivity : AppCompatActivity() {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    Snackbar.make(window.decorView, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(window.decorView, "Authentication Failed.", Snackbar.LENGTH_SHORT)
+                        .show()
 //                    updateUI(null)
                 }
 

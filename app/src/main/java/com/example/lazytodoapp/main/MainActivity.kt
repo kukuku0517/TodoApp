@@ -1,5 +1,6 @@
 package com.example.lazytodoapp.main
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lazytodoapp.R
 import com.example.lazytodoapp.databinding.ActivityMainBinding
 import com.example.lazytodoapp.main.adapter.PlanAdapter
+import com.example.lazytodoapp.plan.PlanActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.extensions.LayoutContainer
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         binding.mRvPlan.adapter = PlanAdapter()
         binding.mRvPlan.layoutManager = LinearLayoutManager(this)
         binding.mFabCreatePlan.setOnClickListener {
-
+            startActivity(Intent(this, PlanActivity::class.java))
         }
         viewModel.getPlans()
     }
@@ -41,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-@BindingAdapter("app:bindItem")
+@BindingAdapter("bindItem")
 fun RecyclerView.bindItem(plans: ObservableList<Plan>) {
     (this.adapter as PlanAdapter?)?.setItem(plans)
 }

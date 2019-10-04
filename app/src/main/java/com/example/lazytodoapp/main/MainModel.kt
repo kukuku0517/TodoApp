@@ -1,5 +1,7 @@
 package com.example.lazytodoapp.main
 
+import android.util.Log
+import com.example.lazytodoapp.tag
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -75,12 +77,23 @@ data class Plan(
     val createdAt: Date? = null,
     val priority: Float = Float.MAX_VALUE,
     var dueDate: Date? = null,
-    val title: String = "",
-    val description: String = "",
-    val mandatory: Float = WANT,
+    var title: String = "",
+    var description: String = "",
+    var mandatory: Float = WANT,
     val duration: Duration = Duration(),
-    val repeat: Repeat = Repeat(0, 0)
+    var repeat: Repeat = Repeat()
 ) {
+
+
+    fun isDayOfWeek(dayOfWeek: Int): Boolean {
+        val prev = repeat.everyDayOfWeek.toInt()
+        val isDayOfWeek = (1 shl prev and (1 shl dayOfWeek)) == 1 shl dayOfWeek
+        Log.i(tag(), "isDayOfWeek ${isDayOfWeek}")
+        return isDayOfWeek
+
+    }
+
+
     companion object {
         const val MUST = 1f
         const val SHOULD = 0.5f
@@ -94,8 +107,8 @@ data class Duration(
 )
 
 data class Repeat(
-    val everyNDay: Int,
-    val everyDayOfWeek: Int
+    var everyNDay: String = "0",
+    var everyDayOfWeek: String = "0"
 )
 
 inline fun <reified T : Any> Task<QuerySnapshot>.rx(): Single<List<T>> {
