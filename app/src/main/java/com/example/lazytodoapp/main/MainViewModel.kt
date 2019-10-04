@@ -1,7 +1,7 @@
 package com.example.lazytodoapp.main
 
 import android.util.Log
-import androidx.databinding.ObservableField
+import androidx.databinding.ObservableArrayList
 import com.example.lazytodoapp.tag
 import io.reactivex.rxkotlin.subscribeBy
 import java.util.*
@@ -9,15 +9,29 @@ import java.util.*
 class MainViewModel(
     val model: MainModel
 ) {
-    val _plans = ObservableField<List<Plan>>()
-    val date = Calendar.getInstance().time
+    val _plans = ObservableArrayList<Plan>()
+    val _date = Calendar.getInstance().time
 
     fun getPlans() {
-        model.getPlans(date)
+
+        model.getPlans(_date)
             .subscribeBy(
                 onSuccess = {
-                    Log.i(tag(),"getPlans Suc")
-                    _plans.set(it)
+                    Log.i(tag(), "getPlans Suc")
+                    _plans.addAll(it)
+                },
+                onError = {
+                    Log.i(tag(), it.message)
+                })
+    }
+
+    fun createPlan() {
+        model.createDummyPlan()
+            .subscribeBy(
+                onSuccess = {
+                    Log.i(tag(), "getPlans Suc")
+                    _plans.clear()
+                    _plans.addAll(it)
                 },
                 onError = {
                     Log.i(tag(), it.message)
