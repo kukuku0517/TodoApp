@@ -1,6 +1,9 @@
 package com.example.lazytodoapp.main
 
 import android.util.Log
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import androidx.databinding.library.baseAdapters.BR
 import com.example.lazytodoapp.tag
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -79,12 +82,18 @@ data class Plan(
     var dueDate: Date? = null,
     var title: String = "",
     var description: String = "",
-    var mandatory: Float = WANT,
+
+    var _mandatory: Float = WANT,
     val duration: Duration = Duration(),
     var repeat: Repeat = Repeat()
-) {
+): BaseObservable() {
 
-
+    var mandatory:Float
+    @Bindable get() = _mandatory
+    set(value){
+        this._mandatory = value
+        notifyPropertyChanged(BR.mandatory)
+    }
     fun isDayOfWeek(dayOfWeek: Int): Boolean {
         val prev = repeat.everyDayOfWeek.toInt()
         val isDayOfWeek = (1 shl prev and (1 shl dayOfWeek)) == 1 shl dayOfWeek

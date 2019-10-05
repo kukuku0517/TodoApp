@@ -35,15 +35,15 @@ class PlanActivity : AppCompatActivity() {
                     TimePickerDialog(
                         this,
                         TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                            val plan = viewModel.plan.get()
+//                            val plan = viewModel.plan
                             val newCal = Calendar.getInstance()
                             newCal.set(Calendar.YEAR, year)
                             newCal.set(Calendar.MONTH, month)
                             newCal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                             newCal.set(Calendar.HOUR_OF_DAY, hourOfDay)
                             newCal.set(Calendar.MINUTE, minute)
-                            plan?.let {
-                                viewModel.plan.set(it.copy(dueDate = newCal.time))
+                            viewModel.plan.let {
+                                viewModel.plan.dueDate = newCal.time
                             }
                         },
                         0,
