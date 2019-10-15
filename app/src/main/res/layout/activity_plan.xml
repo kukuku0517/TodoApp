@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-<data>
-    <variable
-        name="vm"
-        type="com.example.lazytodoapp.plan.PlanViewModel" />
-</data>
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.example.lazytodoapp.plan.PlanViewModel" />
+    </data>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+
         tools:context=".plan.PlanActivity">
 
         <TextView
             android:id="@+id/mTvPlanTitleTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="제목" />
+            android:text="제목"
+            android:theme="@style/PlanTitle" />
 
         <EditText
             android:id="@+id/mEtPlanTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="@={vm.plan.title}"
             android:hint="제목을 입력하세요"
+            android:text="@={vm.plan.title}"
 
             />
 
@@ -34,8 +38,8 @@
             android:id="@+id/mTvPlanDescriptionTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
             android:text="내용"
+            android:theme="@style/PlanTitle"
 
             />
 
@@ -45,13 +49,13 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
 
-            android:text="@={vm.plan.description}"
-            android:hint="내용을 입력하세요" />
+            android:hint="내용을 입력하세요"
+            android:text="@={vm.plan.description}" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:theme="@style/PlanTitle"
             android:text="기한"
 
             />
@@ -61,14 +65,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:onDateChange="@{vm.plan.dueDate}"
-            tools:text="12/31"/>
+            tools:text="12/31" />
 
         <TextView
             android:id="@+id/mTvPlanMandatoryTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_margin="16dp"
+            android:theme="@style/PlanTitle"
             android:text="얼마나 중요한가요?" />
 
         <TextView
@@ -81,7 +85,7 @@
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:selectedValue="@={vm.plan.mandatory}"/>
+            app:selectedValue="@={vm.plan.mandatory}" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -97,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:text="@={vm.plan.repeat.everyNDay}"/>
+                android:text="@={vm.plan.repeat.everyNDay}" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -113,71 +117,71 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:textStyle="@{vm.plan.isDayOfWeek(0)?`bold`:`normal`}"
                 android:onClick="@{()->vm.setDayOfWeek(0)}"
-                android:text="월" />
+                android:text="월"
+                android:textStyle="@{vm.plan.isDayOfWeek(0)?`bold`:`normal`}" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:textStyle="@{vm.plan.isDayOfWeek(1)?`bold`:`normal`}"
                 android:onClick="@{()->vm.setDayOfWeek(1)}"
+                android:text="화"
 
-                android:text="화" />
+                android:textStyle="@{vm.plan.isDayOfWeek(1)?`bold`:`normal`}" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:textStyle="@{vm.plan.isDayOfWeek(2)?`bold`:`normal`}"
                 android:onClick="@{()->vm.setDayOfWeek(2)}"
+                android:text="수"
 
-                android:text="수" />
+                android:textStyle="@{vm.plan.isDayOfWeek(2)?`bold`:`normal`}" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:textStyle="@{vm.plan.isDayOfWeek(3)?`bold`:`normal`}"
                 android:onClick="@{()->vm.setDayOfWeek(3)}"
+                android:text="목"
 
-                android:text="목" />
+                android:textStyle="@{vm.plan.isDayOfWeek(3)?`bold`:`normal`}" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:textStyle="@{vm.plan.isDayOfWeek(4)?`bold`:`normal`}"
                 android:onClick="@{()->vm.setDayOfWeek(4)}"
+                android:text="금"
 
-                android:text="금" />
+                android:textStyle="@{vm.plan.isDayOfWeek(4)?`bold`:`normal`}" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:textStyle="@{vm.plan.isDayOfWeek(5)?`bold`:`normal`}"
                 android:onClick="@{()->vm.setDayOfWeek(5)}"
+                android:text="토"
 
 
-                android:text="토" />
+                android:textStyle="@{vm.plan.isDayOfWeek(5)?`bold`:`normal`}" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:textStyle="@{vm.plan.isDayOfWeek(6)?`bold`:`normal`}"
                 android:onClick="@{()->vm.setDayOfWeek(6)}"
+                android:text="일"
 
-                android:text="일" />
+                android:textStyle="@{vm.plan.isDayOfWeek(6)?`bold`:`normal`}" />
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{()->vm.onSubmit()}"
-            android:text="완료"/>
+            android:text="완료" />
 
     </LinearLayout>
 </layout>
