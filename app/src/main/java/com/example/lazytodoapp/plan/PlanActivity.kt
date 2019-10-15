@@ -12,7 +12,9 @@ import com.example.lazytodoapp.R
 import com.example.lazytodoapp.UiActions
 import com.example.lazytodoapp.databinding.ActivityPlanBinding
 import com.example.lazytodoapp.main.RemotePlanRepository
+import com.example.lazytodoapp.tag
 import kotlinx.android.synthetic.main.activity_plan.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class PlanActivity : AppCompatActivity(), UiActions {
@@ -27,6 +29,7 @@ class PlanActivity : AppCompatActivity(), UiActions {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_plan)
         binding.vm = viewModel
+
         mTvPlanDueDate.setOnClickListener {
             val cal = Calendar.getInstance()
 
@@ -57,12 +60,69 @@ class PlanActivity : AppCompatActivity(), UiActions {
                 cal.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
+
+        mChipGroupDueDate.setOnCheckedChangeListener { chipGroup, i ->
+            val index = i - 1
+            val prev = viewModel.dueDateSelection.indexOf(true)
+            val prevDate = viewModel.plan.dueDate
+            Log.i(tag(), "mChipGroupDueDate $index prev: $prev ${prevDate.toString()}")
+
+            if (prev == index) return@setOnCheckedChangeListener
+
+            if (index == PlanViewModel.DUE_CUSTOM) {
+                val cal = Calendar.getInstance()
+                DatePickerDialog(
+                    this,
+                    DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                        TimePickerDialog(
+                            this,
+                            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                                //                            val plan = viewModel.plan
+                                val newCal = Calendar.getInstance()
+                                newCal.set(Calendar.YEAR, year)
+                                newCal.set(Calendar.MONTH, month)
+                                newCal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                                newCal.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                                newCal.set(Calendar.MINUTE, minute)
+
+                                viewModel.onSelectDueDate(index, newCal.time)
+
+                            },
+                            0,
+                            0,
+                            true
+                        ).apply {
+                            this.setOnCancelListener {
+                                Log.i(tag(), "chipgroup setOnCancelListener")
+                                viewModel.onSelectDueDate(prev, prevDate)
+                            }
+                        }.show()
+                    },
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)
+                ).apply {
+                    this.setOnCancelListener {
+
+                        Log.i(tag(), "chipgroup setOnCancelListener")
+                        viewModel.onSelectDueDate(prev, prevDate)
+                    }
+                }.show()
+            } else {
+                viewModel.onSelectDueDate(index, null)
+            }
+
+
+        }
     }
 }
 
 @BindingAdapter("onDateChange")
 fun TextView.onDateChange(date: Date?) {
-    this.text = date.toString()
+    date?.let { date ->
+        this.text = SimpleDateFormat("MM/dd까지", Locale.getDefault()).format(date.time)
+    }
+
 }
 
 @BindingAdapter("android:textStyle")

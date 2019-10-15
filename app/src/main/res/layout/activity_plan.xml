@@ -6,180 +6,284 @@
         <variable
             name="vm"
             type="com.example.lazytodoapp.plan.PlanViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="com.example.lazytodoapp.main.Repeat" />
+
+        <import type="com.example.lazytodoapp.plan.PlanViewModel" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-
-        tools:context=".plan.PlanActivity">
-
-        <TextView
-            android:id="@+id/mTvPlanTitleTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="제목"
-            android:theme="@style/PlanTitle" />
-
-        <EditText
-            android:id="@+id/mEtPlanTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:hint="제목을 입력하세요"
-            android:text="@={vm.plan.title}"
-
-            />
-
-        <TextView
-            android:id="@+id/mTvPlanDescriptionTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="내용"
-            android:theme="@style/PlanTitle"
-
-    <data>
-
-        <variable
-            name="vm"
-            type="com.example.lazytodoapp.plan.PlanViewModel" />
-
-            android:hint="내용을 입력하세요"
-            android:text="@={vm.plan.description}" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:theme="@style/PlanTitle"
-            android:text="기한"
-
-            />
-
-        <TextView
-            android:id="@+id/mTvPlanDueDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:onDateChange="@{vm.plan.dueDate}"
-            tools:text="12/31" />
-
-        <TextView
-            android:id="@+id/mTvPlanMandatoryTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:theme="@style/PlanTitle"
-            android:text="얼마나 중요한가요?" />
 
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:selectedValue="@={vm.plan.mandatory}" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".plan.PlanActivity">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="반복" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="New Todo"
+                android:textAlignment="center" />
+
             <TextView
                 android:id="@+id/mTvPlanTitleTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="제목" />
+                android:layout_margin="8dp"
+                android:text="제목"
+                android:theme="@style/PlanTitle" />
 
             <EditText
                 android:id="@+id/mEtPlanTitle"
+                style="@style/PlanEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:text="@={vm.plan.repeat.everyNDay}" />
+
+                android:hint="제목을 입력하세요"
+                android:text="@={vm.plan.title}"
+
+                />
+
             <TextView
                 android:id="@+id/mTvPlanDescriptionTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+
+                android:layout_margin="8dp"
                 android:text="내용"
+                android:theme="@style/PlanTitle"
 
                 />
 
             <EditText
+
                 android:id="@+id/mEtPlanDescription"
+                style="@style/PlanEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:onClick="@{()->vm.setDayOfWeek(0)}"
-                android:text="월"
-                android:textStyle="@{vm.plan.isDayOfWeek(0)?`bold`:`normal`}" />
+
+                android:hint="내용을 입력하세요"
+                android:text="@={vm.plan.description}" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:onClick="@{()->vm.setDayOfWeek(1)}"
-                android:text="화"
 
-                android:textStyle="@{vm.plan.isDayOfWeek(1)?`bold`:`normal`}" />
+                android:layout_margin="8dp"
+                android:text="기한"
+                android:theme="@style/PlanTitle"
+
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.chip.ChipGroup
+                    app:singleSelection="true"
+                    android:id="@+id/mChipGroupDueDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.chip.Chip
+                        android:checked="@{vm.dueDateSelection[0]}"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="오늘" />
+
+                    <com.google.android.material.chip.Chip
+
+                        android:checked="@{vm.dueDateSelection[1]}"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="내일" />
+
+                    <com.google.android.material.chip.Chip
+
+                        android:checked="@{vm.dueDateSelection[2]}"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="모레" />
+
+                    <com.google.android.material.chip.Chip
+
+                        android:checked="@{vm.dueDateSelection[3]}"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="다음주" />
+
+                    <com.google.android.material.chip.Chip
+
+                        android:checked="@{vm.dueDateSelection[4]}"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="직접 선택" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/mTvPlanDueDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:onClick="@{()->vm.setDayOfWeek(2)}"
-                android:text="수"
+                app:onDateChange="@{vm.plan.dueDate}"
+                tools:text="12/31" />
 
-                android:textStyle="@{vm.plan.isDayOfWeek(2)?`bold`:`normal`}" />
+
             <TextView
                 android:id="@+id/mTvPlanMandatoryTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:onClick="@{()->vm.setDayOfWeek(3)}"
-                android:text="목"
 
-                android:textStyle="@{vm.plan.isDayOfWeek(3)?`bold`:`normal`}" />
+
+                android:layout_margin="8dp"
+                android:text="얼마나 중요한가요?"
+                android:theme="@style/PlanTitle" />
+
             <TextView
                 android:id="@+id/mTvPlanMandatory"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"    android:layout_margin="8dp"
-                android:onClick="@{()->vm.setDayOfWeek(4)}"
-                android:text="금"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@{vm.plan.mandatory}" />
 
-                android:textStyle="@{vm.plan.isDayOfWeek(4)?`bold`:`normal`}" />
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:selectedValue="@={vm.plan.mandatory}" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:layout_margin="8dp"
-                android:onClick="@{()->vm.setDayOfWeek(5)}"
-                android:text="토"
+                android:text="반복"
+                android:theme="@style/PlanTitle" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                android:textStyle="@{vm.plan.isDayOfWeek(5)?`bold`:`normal`}" />
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:text="@={vm.plan.repeat.everyNDay}" />
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="일마다" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:onClick="@{()->vm.setDayOfWeek(6)}"
-                android:text="일"
+                android:layout_height="wrap_content">
 
-                android:textStyle="@{vm.plan.isDayOfWeek(6)?`bold`:`normal`}" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:onClick="@{()->vm.plan.repeat.setDayOfWeek(0)}"
+                    android:text="월"
+                    android:textStyle="@{vm.plan.repeat.everyDayOfWeek[0]?`bold`:`normal`}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:onClick="@{()->vm.plan.repeat.setDayOfWeek(1)}"
+                    android:text="화"
+                    android:textStyle="@{vm.plan.repeat.everyDayOfWeek[1]?`bold`:`normal`}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:onClick="@{()->vm.plan.repeat.setDayOfWeek(2)}"
+                    android:text="수"
+                    android:textStyle="@{vm.plan.repeat.everyDayOfWeek[2]?`bold`:`normal`}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:onClick="@{()->vm.plan.repeat.setDayOfWeek(3)}"
+                    android:text="목"
+                    android:textStyle="@{vm.plan.repeat.everyDayOfWeek[3]?`bold`:`normal`}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:onClick="@{()->vm.plan.repeat.setDayOfWeek(4)}"
+                    android:text="금"
+                    android:textStyle="@{vm.plan.repeat.everyDayOfWeek[4]?`bold`:`normal`}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:onClick="@{()->vm.plan.repeat.setDayOfWeek(5)}"
+                    android:text="토"
+                    android:textStyle="@{vm.plan.repeat.everyDayOfWeek[5]?`bold`:`normal`}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:onClick="@{()->vm.plan.repeat.setDayOfWeek(6)}"
+                    android:text="일"
+                    android:textStyle="@{vm.plan.repeat.everyDayOfWeek[6]?`bold`:`normal`}" />
+
+            </LinearLayout>
+
+
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center"
+            android:background="@color/colorPrimary"
+            android:onClick="@{()->vm.onSubmit()}"
+            android:padding="8dp"
+
+            android:text="완료"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
         <ProgressBar
-            android:visibility="@{vm.isLoading()?View.VISIBLE:View.GONE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{()->vm.onSubmit()}"
-            android:text="완료" />
-
-    </LinearLayout>
+            android:layout_gravity="center"
+            android:visibility="@{vm.isLoading()?View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
