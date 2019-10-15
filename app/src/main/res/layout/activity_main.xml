@@ -2,7 +2,6 @@
 <layout>
 
     <data>
-
         <variable
             name="vm"
             type="com.example.lazytodoapp.main.MainViewModel" />
@@ -17,6 +16,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mRvPlan"
+            android:background="@color/grey"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:bindItem="@{vm._plans}" />

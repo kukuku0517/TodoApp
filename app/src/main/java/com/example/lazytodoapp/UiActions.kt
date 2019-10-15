@@ -1,4 +1,8 @@
 package com.example.lazytodoapp
 
-class Navigator {
+import android.content.Intent
+
+interface UiActions {
+    fun startActivity(intent: Intent)
+    fun finish()
 }

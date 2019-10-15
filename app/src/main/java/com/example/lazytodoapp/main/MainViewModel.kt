@@ -11,18 +11,25 @@ class MainViewModel(
 ) {
     val _plans = ObservableArrayList<Plan>()
     val _date = Calendar.getInstance().time
+    var isLoading = false
 
     fun getPlans() {
 
-        model.getPlans(_date)
-            .subscribeBy(
-                onSuccess = {
-                    Log.i(tag(), "getPlans Suc")
-                    _plans.addAll(it)
-                },
-                onError = {
-                    Log.i(tag(), it.message)
-                })
+        if (!isLoading){
+            model.getPlans(_date)
+                .doOnSubscribe { isLoading = true }
+                .subscribeBy(
+                    onSuccess = {
+                        Log.i(tag(), "getPlans Suc")
+                        _plans.clear()
+                        _plans.addAll(it)
+                        isLoading = false
+                    },
+                    onError = {
+                        isLoading = false
+                        Log.i(tag(), it.message)
+                    })
+        }
     }
 
     fun createPlan() {

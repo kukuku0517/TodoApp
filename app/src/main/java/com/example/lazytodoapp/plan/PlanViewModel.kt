@@ -1,31 +1,49 @@
 package com.example.lazytodoapp.plan
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.databinding.ObservableField
+import com.example.lazytodoapp.UiActions
+import com.example.lazytodoapp.main.MainModel
 import com.example.lazytodoapp.main.Plan
-import com.example.lazytodoapp.main.Repeat
-import com.example.lazytodoapp.tag
+import io.reactivex.rxkotlin.subscribeBy
 import java.util.*
 
 class PlanViewModel(
-    val context: Context,
+    val uiActions: UiActions,
     val model: PlanModel
 ) {
     val plan = Plan(
-        dueDate = Calendar.getInstance().time
+        _dueDate = Calendar.getInstance().time
     )
+
+    var isLoading = ObservableField(false)
 
 
     fun onSubmit() {
-        Toast.makeText(context, plan.toString(), Toast.LENGTH_LONG).show()
+
+        model.postPlan(plan)
+            .doOnSubscribe { isLoading.set(true) }
+            .subscribeBy(
+                onSuccess = {
+                    isLoading.set(false)
+                    uiActions.finish()
+                },
+                onError = {
+                    isLoading.set(false)
+                }
+            )
+    }
+}
+
+class PlanItemViewModel(
+    var plan: Plan,
+    val model: MainModel
+) {
+
+    fun onCheck(isChecked:Boolean) {
+        model.checkPlan(plan.copy(_isChecked =isChecked))
+            .subscribeBy(onComplete = {
+                plan.isChecked = isChecked
+            })
     }
 
-    fun setDayOfWeek(dayOfWeek: Int) {
-        val prev = plan.repeat.everyDayOfWeek.toInt()
-        Log.i(tag(), "setDayOfWeek ${prev} $dayOfWeek ${prev xor dayOfWeek}")
-        plan.repeat = plan.repeat.copy(everyDayOfWeek = (prev xor (1 shl dayOfWeek)).toString())
-
-    }
 }

@@ -5,22 +5,23 @@ import android.app.TimePickerDialog
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.*
 import com.example.lazytodoapp.R
+import com.example.lazytodoapp.UiActions
 import com.example.lazytodoapp.databinding.ActivityPlanBinding
-import com.example.lazytodoapp.main.Plan
+import com.example.lazytodoapp.main.RemotePlanRepository
 import kotlinx.android.synthetic.main.activity_plan.*
-import org.w3c.dom.Text
 import java.util.*
 
-class PlanActivity : AppCompatActivity() {
+class PlanActivity : AppCompatActivity(), UiActions {
 
     lateinit var binding: ActivityPlanBinding
-    val viewModel = PlanViewModel(this, PlanModel())
-
+    val viewModel = PlanViewModel(
+        this,
+        PlanModel(RemotePlanRepository())
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,7 @@ class PlanActivity : AppCompatActivity() {
                     TimePickerDialog(
                         this,
                         TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-//                            val plan = viewModel.plan
+                            //                            val plan = viewModel.plan
                             val newCal = Calendar.getInstance()
                             newCal.set(Calendar.YEAR, year)
                             newCal.set(Calendar.MONTH, month)

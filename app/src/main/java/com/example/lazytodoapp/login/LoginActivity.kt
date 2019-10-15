@@ -78,21 +78,14 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
-                    val user = auth.currentUser
-
                     startActivity(Intent(this, MainActivity::class.java))
-//                    updateUI(user)
+
                 } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                   Log.w(TAG, "signInWithCredential:failure", task.exception)
                     Snackbar.make(window.decorView, "Authentication Failed.", Snackbar.LENGTH_SHORT)
                         .show()
-//                    updateUI(null)
                 }
-
-                // ...
             }
     }
 
