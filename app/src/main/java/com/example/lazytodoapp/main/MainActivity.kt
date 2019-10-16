@@ -36,8 +36,3 @@ class MainActivity : AppCompatActivity() {
         viewModel.getPlans()
     }
 }
-
-@BindingAdapter("bindItem")
-fun RecyclerView.bindItem(plans: ObservableList<Plan>) {
-    (this.adapter as PlanAdapter?)?.setItem(plans)
-}

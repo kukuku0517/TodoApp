@@ -8,10 +8,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="PlanSection">
+        <item name="android:textSize">@dimen/plan_section</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+
+
     <style name="PlanTitle" parent="Widget.AppCompat.TextView">
         <item name="android:textSize">@dimen/plan_title</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:layout_margin">16dp</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:useDefaultMargins">false</item>
     </style>
 
@@ -23,6 +32,12 @@
 
         <item name="android:layout_margin">8dp</item>
         <item name="android:background">@drawable/background_round_corner_edittext</item>
+    </style>
+
+    <style name="PlanCaption">
+        <item name="android:textSize">@dimen/plan_caption</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:useDefaultMargins">false</item>
     </style>
 
 

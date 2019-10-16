@@ -32,17 +32,19 @@ class PlanViewModel(
     )
     //    var dueDateSelection = ObservableField(0)
     var dueDateSelection = ObservableArrayList<Boolean>().apply {
-        this.addAll(listOf(true, false, false, false, false))
+        this.addAll(List(5) { false })
     }
-
 
     var isLoading = ObservableField(false)
 
 
     fun onSelectDueDate(index: Int, date: Date?) {
         val prev = dueDateSelection.indexOf(true)
-        dueDateSelection[prev] = false
-        dueDateSelection[index]= true
+        if (prev != -1) {
+            dueDateSelection[prev] = false
+        }
+        dueDateSelection[index] = true
+
         when (index) {
             DUE_TODAY -> {
                 plan.dueDate = Calendar.getInstance().end().time

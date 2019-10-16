@@ -151,8 +151,8 @@ data class Plan(
     }
 
     companion object {
-        const val MUST = 1f
-        const val SHOULD = 0.5f
+        const val MUST = 100f
+        const val SHOULD = 50f
         const val WANT = 0f
     }
 }

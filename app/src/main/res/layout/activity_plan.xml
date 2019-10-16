@@ -89,52 +89,53 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.chip.ChipGroup
-                    app:singleSelection="true"
                     android:id="@+id/mChipGroupDueDate"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true">
+
                     <com.google.android.material.chip.Chip
-                        android:checked="@{vm.dueDateSelection[0]}"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
+                        android:checked="@{vm.dueDateSelection[0]}"
                         android:text="오늘" />
 
                     <com.google.android.material.chip.Chip
 
-                        android:checked="@{vm.dueDateSelection[1]}"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
+                        android:checked="@{vm.dueDateSelection[1]}"
                         android:text="내일" />
 
                     <com.google.android.material.chip.Chip
 
-                        android:checked="@{vm.dueDateSelection[2]}"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
+                        android:checked="@{vm.dueDateSelection[2]}"
                         android:text="모레" />
 
                     <com.google.android.material.chip.Chip
 
-                        android:checked="@{vm.dueDateSelection[3]}"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
+                        android:checked="@{vm.dueDateSelection[3]}"
                         android:text="다음주" />
 
                     <com.google.android.material.chip.Chip
 
-                        android:checked="@{vm.dueDateSelection[4]}"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
+                        android:checked="@{vm.dueDateSelection[4]}"
                         android:text="직접 선택" />
 
                 </com.google.android.material.chip.ChipGroup>
@@ -159,17 +160,52 @@
                 android:text="얼마나 중요한가요?"
                 android:theme="@style/PlanTitle" />
 
-            <TextView
-                android:id="@+id/mTvPlanMandatory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="@{vm.plan.mandatory}" />
-
-            <SeekBar
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:selectedValue="@={vm.plan.mandatory}" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/mTvPlanWant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="WANT"
+                    android:textStyle="@{vm.plan.mandatory &lt; 33? `bold`: `normal`}"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/mTvPlanShould"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="SHOULD"
+                    android:textStyle="@{vm.plan.mandatory &gt; 33 &amp;&amp;  vm.plan.mandatory &lt; 66? `bold`: `normal`}"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/mTvPlanMust"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="MUST"
+                    android:textStyle="@{vm.plan.mandatory &gt; 66 ? `bold`: `normal`}"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <SeekBar
+
+                    android:layout_width="match_parent"
+                    android:max="100"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/mTvPlanWant"
+                    app:selectedValue="@={vm.plan.mandatory}" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -181,18 +217,47 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content">
 
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
                     android:inputType="number"
                     android:text="@={vm.plan.repeat.everyNDay}" />
 
                 <TextView
                     android:layout_width="wrap_content"
+                    android:layout_marginRight="8dp"
                     android:layout_height="wrap_content"
                     android:text="일마다" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/mChipGroupRepeat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="1일"/>
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="2일"/>
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="3일"/>
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="매주"/>
+                </com.google.android.material.chip.ChipGroup>
             </LinearLayout>
 
             <LinearLayout
