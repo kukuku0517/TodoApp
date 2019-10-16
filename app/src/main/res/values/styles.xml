@@ -6,12 +6,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
     </style>
 
 
     <style name="PlanSection">
         <item name="android:textSize">@dimen/plan_section</item>
         <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 

@@ -62,10 +62,11 @@ class RemotePlanRepository : PlanRepository {
     }
 
     override fun createPlan(plan: Plan): Single<Plan> {
-        return db.collection(USER).document(getUser().uid).collection(PLAN).add(plan)
-            .rx(plan) { id, plan ->
-                plan.copy(id = id)
-            }
+        val id = getUser().uid + plan.createdAt
+        val planWithId = plan.copy(id = id)
+        return db.collection(USER).document(getUser().uid).collection(PLAN).document(id).set(planWithId)
+            .rx()
+            .andThen(Single.just(planWithId))
     }
 
     companion object {

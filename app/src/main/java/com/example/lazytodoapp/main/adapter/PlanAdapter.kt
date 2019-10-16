@@ -5,20 +5,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.BindingAdapter
-import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableList
 import androidx.recyclerview.widget.RecyclerView
-import com.example.lazytodoapp.R
 import com.example.lazytodoapp.databinding.ItemPlanBinding
 import com.example.lazytodoapp.main.MainModel
 import com.example.lazytodoapp.main.Plan
 import com.example.lazytodoapp.plan.PlanItemViewModel
 import com.example.lazytodoapp.tag
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_plan.view.*
 import kotlinx.android.synthetic.main.item_plan_title.view.*
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
+import android.graphics.Paint
+import com.example.lazytodoapp.R
+
+
 
 
 class PlanAdapter(val model: MainModel) : RecyclerView.Adapter<PlanBaseViewHolder>() {
@@ -82,9 +85,9 @@ class PlanAdapter(val model: MainModel) : RecyclerView.Adapter<PlanBaseViewHolde
 
     fun setItem(newPlans: List<Plan>, key: Int) {
         when (key) {
-            PLANS_TODAY -> plansTod = newPlans.map { PlanWrapper(it) }
-            PLANS_TOMORROW -> plansTom = newPlans.map { PlanWrapper(it) }
-            PLANS_LATER -> plansLat = newPlans.map { PlanWrapper(it) }
+            PLANS_TODAY -> plansTod = newPlans.map { PlanWrapper(it, PLANS_TODAY) }
+            PLANS_TOMORROW -> plansTom = newPlans.map { PlanWrapper(it, PLANS_TOMORROW) }
+            PLANS_LATER -> plansLat = newPlans.map { PlanWrapper(it, PLANS_LATER) }
         }
 
         plans = mutableListOf<BasePlan>().apply {
@@ -115,11 +118,13 @@ class PlanTitle(
 ) : BasePlan()
 
 data class PlanWrapper(
-    val plan: Plan
+    val plan: Plan,
+    val listKey: Int
 ) : BasePlan()
 
 
-abstract class PlanBaseViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
+abstract class PlanBaseViewHolder(override val containerView: View) :
+    RecyclerView.ViewHolder(containerView), LayoutContainer {
     abstract fun bindView(position: Int, item: BasePlan)
 }
 
@@ -132,12 +137,13 @@ class PlanTitleViewHolder(override val containerView: View) :
 
 }
 
-class PlanViewHolder(var binding: ItemPlanBinding, val model: MainModel) : PlanBaseViewHolder(binding.root){
+class PlanViewHolder(var binding: ItemPlanBinding, val model: MainModel) :
+    PlanBaseViewHolder(binding.root) {
 
     override val containerView: View = binding.root
 
     override fun bindView(position: Int, item: BasePlan) {
-        val viewModel = PlanItemViewModel((item as PlanWrapper).plan, model)
+        val viewModel = PlanItemViewModel(item as PlanWrapper, model)
         binding.vm = viewModel
         binding.notifyChange()
     }
@@ -163,4 +169,14 @@ fun RecyclerView.bindItem1(plans: ObservableList<Plan>) {
 @BindingAdapter("bindItem2")
 fun RecyclerView.bindItem2(plans: ObservableList<Plan>) {
     (this.adapter as PlanAdapter?)?.setItem(plans, PlanAdapter.PLANS_LATER)
+}
+
+
+@BindingAdapter("strikeThrough")
+fun TextView.bindStrikeThrough(enable: Boolean) {
+    if (enable) {
+        this.paintFlags = this.paintFlags or STRIKE_THRU_TEXT_FLAG
+    }else{
+        this.paintFlags = this.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+    }
 }

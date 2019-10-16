@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="vm"
             type="com.example.lazytodoapp.plan.PlanItemViewModel" />
+
+        <import type="com.example.lazytodoapp.main.adapter.PlanAdapter" />
+
+        <import type="android.view.View" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
 
         android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="4dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -35,25 +38,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_title"
-                    android:text="@{vm.plan.title.length()==0?`제목 없음`:vm.plan.title}"
+                    android:fontFamily="@font/noto_sans"
 
-
+                    app:strikeThrough ="@{vm.plan.checked}"
+                    android:text="@{vm.plan.title.length()==0?@string/no_title:vm.plan.title}"
                     android:theme="@style/PlanTitle"
                     app:layout_constraintBottom_toBottomOf="parent"
+
+
                     app:layout_constraintLeft_toLeftOf="parent"
-
-
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="오늘의 일정" />
 
 
                 <TextView
                     android:id="@+id/mTvItemPlanDueDate"
+
+                    app:strikeThrough ="@{vm.plan.checked}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_caption"
-                    android:theme="@style/PlanCaption"
                     android:text="@{vm.plan.dueDateToString()}"
+                    android:theme="@style/PlanCaption"
+                    android:visibility="@{vm.planWrapper.listKey == PlanAdapter.PLANS_LATER?View.VISIBLE:View.GONE}"
 
                     app:layout_constraintBottom_toBottomOf="@id/mTvItemPlanTitle"
                     app:layout_constraintLeft_toRightOf="@id/mTvItemPlanTitle"

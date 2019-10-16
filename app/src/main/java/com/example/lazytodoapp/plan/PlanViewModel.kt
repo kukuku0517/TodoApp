@@ -2,11 +2,11 @@ package com.example.lazytodoapp.plan
 
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
-import androidx.databinding.ObservableList
 import com.example.lazytodoapp.UiActions
 import com.example.lazytodoapp.end
 import com.example.lazytodoapp.main.MainModel
 import com.example.lazytodoapp.main.Plan
+import com.example.lazytodoapp.main.adapter.PlanWrapper
 import com.example.lazytodoapp.plus
 import io.reactivex.rxkotlin.subscribeBy
 import java.util.*
@@ -82,15 +82,18 @@ class PlanViewModel(
 }
 
 class PlanItemViewModel(
-    var plan: Plan,
+    val planWrapper : PlanWrapper,
     val model: MainModel
 ) {
+    val plan = planWrapper.plan
 
     fun onCheck(isChecked: Boolean) {
-        model.checkPlan(plan.copy(_isChecked = isChecked))
-            .subscribeBy(onComplete = {
-                plan.isChecked = isChecked
-            })
+        if (plan.isChecked != isChecked){
+            model.checkPlan(plan.copy(_isChecked = isChecked))
+                .subscribeBy(onComplete = {
+                    plan.isChecked = isChecked
+                })
+        }
     }
 
 }

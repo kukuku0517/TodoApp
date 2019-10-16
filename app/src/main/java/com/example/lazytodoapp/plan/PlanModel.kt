@@ -14,7 +14,8 @@ class PlanModel(
     val remotePlanRepository: RemotePlanRepository
 ) {
     fun postPlan(plan: Plan): Single<Plan> {
-        return remotePlanRepository.createPlan(plan.copy(createdAt = Calendar.getInstance().time))
+        val createdAt = Calendar.getInstance().time
+        return remotePlanRepository.createPlan(plan.copy(createdAt = createdAt))
 
     }
 }
