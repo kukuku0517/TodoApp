@@ -149,6 +149,7 @@ class PlanViewHolder(var binding: ItemPlanBinding, val model: MainModel) :
     }
 
     fun onClick(position: Int, item: Plan) {
+
         Toast.makeText(containerView.context, "$position clicked", Toast.LENGTH_SHORT).show()
     }
 }
