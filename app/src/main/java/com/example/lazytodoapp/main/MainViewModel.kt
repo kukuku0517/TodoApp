@@ -12,9 +12,11 @@ import java.util.*
 class MainViewModel(
     val model: MainModel
 ) {
+    val _plansLate = ObservableArrayList<Plan>()
     val _plansToday = ObservableArrayList<Plan>()
     val _plansTomorrow = ObservableArrayList<Plan>()
     val _plansLater = ObservableArrayList<Plan>()
+
 
     val _date = Calendar.getInstance().time
     var isLoading = false
@@ -44,6 +46,7 @@ class MainViewModel(
         _plansToday.clear()
         _plansTomorrow.clear()
         _plansLater.clear()
+        _plansLate.clear()
     }
 
     private fun allocatePlans(plans: List<Plan>) {
@@ -68,7 +71,7 @@ class MainViewModel(
                         _plansLater.add(plan)
                     }
                     else -> {
-                        Log.i(tag(), "allocatePlans null ${time.toDate()} ${now.toDate()}")
+                        _plansLate.add(plan)
                     }
                 }
             } ?: run {

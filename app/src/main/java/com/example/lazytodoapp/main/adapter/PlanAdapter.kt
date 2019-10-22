@@ -30,13 +30,16 @@ class PlanAdapter(val model: MainModel) : RecyclerView.Adapter<PlanBaseViewHolde
 
     private var plansTod: List<BasePlan> = listOf()
     private var plansTom: List<BasePlan> = listOf()
-    private var plansLat: List<BasePlan> = listOf()
+    private var plansLater: List<BasePlan> = listOf()
+    private var plansLate: List<BasePlan> = listOf()
+
 
 
     companion object {
         const val PLANS_TODAY = 0
         const val PLANS_TOMORROW = 1
         const val PLANS_LATER = 2
+        const val PLANS_LATE = 3
     }
 
 
@@ -87,7 +90,8 @@ class PlanAdapter(val model: MainModel) : RecyclerView.Adapter<PlanBaseViewHolde
         when (key) {
             PLANS_TODAY -> plansTod = newPlans.map { PlanWrapper(it, PLANS_TODAY) }
             PLANS_TOMORROW -> plansTom = newPlans.map { PlanWrapper(it, PLANS_TOMORROW) }
-            PLANS_LATER -> plansLat = newPlans.map { PlanWrapper(it, PLANS_LATER) }
+            PLANS_LATER -> plansLater = newPlans.map { PlanWrapper(it, PLANS_LATER) }
+            PLANS_LATE -> plansLate = newPlans.map { PlanWrapper(it, PLANS_LATE) }
         }
 
         plans = mutableListOf<BasePlan>().apply {
@@ -99,9 +103,13 @@ class PlanAdapter(val model: MainModel) : RecyclerView.Adapter<PlanBaseViewHolde
                 add(PlanTitle("Tomorrow".toUpperCase()))
                 addAll(plansTom)
             }
-            if (plansLat.isNotEmpty()) {
+            if (plansLater.isNotEmpty()) {
                 add(PlanTitle("Later".toUpperCase()))
-                addAll(plansLat)
+                addAll(plansLater)
+            }
+            if (plansLate.isNotEmpty()) {
+                add(PlanTitle("Late".toUpperCase()))
+                addAll(plansLate)
             }
         }.toList()
 
@@ -160,6 +168,7 @@ fun RecyclerView.bindItem0(plans: ObservableList<Plan>) {
 }
 
 
+
 @BindingAdapter("bindItem1")
 fun RecyclerView.bindItem1(plans: ObservableList<Plan>) {
     (this.adapter as PlanAdapter?)?.setItem(plans, PlanAdapter.PLANS_TOMORROW)
@@ -170,6 +179,12 @@ fun RecyclerView.bindItem1(plans: ObservableList<Plan>) {
 fun RecyclerView.bindItem2(plans: ObservableList<Plan>) {
     (this.adapter as PlanAdapter?)?.setItem(plans, PlanAdapter.PLANS_LATER)
 }
+
+@BindingAdapter("bindItem3")
+fun RecyclerView.bindItem3(plans: ObservableList<Plan>) {
+    (this.adapter as PlanAdapter?)?.setItem(plans, PlanAdapter.PLANS_LATE)
+}
+
 
 
 @BindingAdapter("strikeThrough")

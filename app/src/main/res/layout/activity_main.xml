@@ -59,6 +59,11 @@
                 app:bindItem1="@{vm._plansTomorrow}"
 
                 app:bindItem2="@{vm._plansLater}"
+
+
+                app:bindItem3="@{vm._plansLate}"
+
+
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
                 tools:listitem="@layout/item_plan" />
