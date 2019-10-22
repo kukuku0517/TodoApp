@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="plan_section">16sp</dimen>
+    <dimen name="plan_section">20sp</dimen>
     <dimen name="plan_title">16sp</dimen>
     <dimen name="plan_caption">12sp</dimen>
 

@@ -9,7 +9,8 @@
         android:theme="@style/PlanSection"
         android:layout_marginLeft="@dimen/margin_title"
         android:layout_marginTop="20dp"
-        tools:text="오늘"
+        tools:text="TODAY"
+        android:fontFamily="@font/open_sans_condensed_bold"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
