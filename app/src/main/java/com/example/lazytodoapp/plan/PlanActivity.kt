@@ -11,6 +11,7 @@ import androidx.databinding.*
 import com.example.lazytodoapp.R
 import com.example.lazytodoapp.UiActions
 import com.example.lazytodoapp.databinding.ActivityPlanBinding
+import com.example.lazytodoapp.main.Plan
 import com.example.lazytodoapp.main.RemotePlanRepository
 import com.example.lazytodoapp.tag
 import kotlinx.android.synthetic.main.activity_plan.*
@@ -27,8 +28,15 @@ class PlanActivity : AppCompatActivity(), UiActions {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_plan)
         binding.vm = viewModel
+
+        if (intent.extras!=null){
+            val planToEdit = intent.getParcelableExtra<Plan>(PlanViewModel.PLAN_TO_EDIT)
+            viewModel.plan = (planToEdit)
+        }
 
         mTvPlanDueDate.setOnClickListener {
             val cal = Calendar.getInstance()

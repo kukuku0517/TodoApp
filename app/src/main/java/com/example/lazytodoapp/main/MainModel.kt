@@ -1,5 +1,6 @@
 package com.example.lazytodoapp.main
 
+import android.os.Parcelable
 import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import io.reactivex.Completable
 import io.reactivex.Single
+import kotlinx.android.parcel.Parcelize
 import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -62,9 +64,14 @@ class RemotePlanRepository : PlanRepository {
     }
 
     override fun createPlan(plan: Plan): Single<Plan> {
-        val id = getUser().uid + plan.createdAt
-        val planWithId = plan.copy(id = id)
-        return db.collection(USER).document(getUser().uid).collection(PLAN).document(id).set(planWithId)
+        val planWithId = if (plan.id.isEmpty()) {
+            plan.copy(id = getUser().uid + plan.createdAt)
+        } else {
+            plan
+        }
+
+        return db.collection(USER).document(getUser().uid).collection(PLAN).document(planWithId.id)
+            .set(planWithId, SetOptions.merge())
             .rx()
             .andThen(Single.just(planWithId))
     }
@@ -96,6 +103,7 @@ class RemotePlanRepository : PlanRepository {
     }
 }
 
+@Parcelize
 data class Plan(
     val id: String = "",
     val createdAt: Date? = null,
@@ -109,7 +117,7 @@ data class Plan(
     var _dueDate: Date? = null,
     var _mandatory: Float = WANT,
     var _repeat: Repeat = Repeat()
-) : BaseObservable() {
+) : BaseObservable(), Parcelable {
 
     var mandatory: Float
         @Bindable get() = _mandatory
@@ -157,16 +165,18 @@ data class Plan(
         const val WANT = 0f
     }
 }
-
+@Parcelize
 data class Duration(
     val day: Int = 0,
     val hour: Int = 0
-)
+):Parcelable
 
+
+@Parcelize
 data class Repeat(
     var everyNDay: String = "0",
     var _everyDayOfWeek: List<Boolean> = listOf(false, false, false, false, false, false, false)
-) : BaseObservable() {
+) : BaseObservable(), Parcelable {
     companion object {
         const val MON = (1 shl 0).toString()
         const val TUE = (1 shl 1).toString()

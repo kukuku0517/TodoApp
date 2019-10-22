@@ -24,10 +24,11 @@ class PlanViewModel(
         const val DUE_NEXT_WEEK = 3
         const val DUE_CUSTOM = 4
 
+        const val PLAN_TO_EDIT = "PLAN_TO_EDIT"
 
     }
 
-    val plan = Plan(
+    var plan = Plan(
         _dueDate = Calendar.getInstance().time
     )
     //    var dueDateSelection = ObservableField(0)

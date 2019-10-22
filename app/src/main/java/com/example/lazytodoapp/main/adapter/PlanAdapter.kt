@@ -1,6 +1,7 @@
 package com.example.lazytodoapp.main.adapter
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,8 +21,8 @@ import kotlinx.android.synthetic.main.item_plan_title.view.*
 import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.graphics.Paint
 import com.example.lazytodoapp.R
-
-
+import com.example.lazytodoapp.plan.PlanActivity
+import com.example.lazytodoapp.plan.PlanViewModel
 
 
 class PlanAdapter(val model: MainModel) : RecyclerView.Adapter<PlanBaseViewHolder>() {
@@ -32,7 +33,6 @@ class PlanAdapter(val model: MainModel) : RecyclerView.Adapter<PlanBaseViewHolde
     private var plansTom: List<BasePlan> = listOf()
     private var plansLater: List<BasePlan> = listOf()
     private var plansLate: List<BasePlan> = listOf()
-
 
 
     companion object {
@@ -94,7 +94,7 @@ class PlanAdapter(val model: MainModel) : RecyclerView.Adapter<PlanBaseViewHolde
             PLANS_LATE -> plansLate = newPlans.map { PlanWrapper(it, PLANS_LATE) }
         }
 
-        plans = mutableListOf<BasePlan>().apply {
+        val newPlansSectioned = mutableListOf<BasePlan>().apply {
             if (plansTod.isNotEmpty()) {
                 add(PlanTitle("Today".toUpperCase()))
                 addAll(plansTod)
@@ -114,7 +114,25 @@ class PlanAdapter(val model: MainModel) : RecyclerView.Adapter<PlanBaseViewHolde
         }.toList()
 
         Log.i(tag(), "plans setItem ${plans.size}")
-        notifyDataSetChanged()
+
+        val oldPlans = mutableListOf<BasePlan>().apply { addAll(plans) }
+
+        plans = mutableListOf<BasePlan>().apply { addAll(newPlansSectioned) }
+
+        var removeIndex = 0
+        oldPlans.forEachIndexed { index, basePlan ->
+            if (!newPlansSectioned.contains(basePlan)) {
+                notifyItemRemoved(index - removeIndex++)
+                Log.i(tag(), "notify item removed $index")
+            }
+        }
+
+        newPlansSectioned.forEachIndexed { index, basePlan ->
+            if (!oldPlans.contains(basePlan)) {
+                notifyItemInserted(index)
+                Log.i(tag(), "notify item inserted $index")
+            }
+        }
     }
 }
 
@@ -123,7 +141,19 @@ open class BasePlan
 
 class PlanTitle(
     val title: String
-) : BasePlan()
+) : BasePlan(){
+    override fun equals(other: Any?): Boolean {
+      return if (other is PlanTitle){
+          this.title == other.title
+      }else{
+          super.equals(other)
+      }
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
+}
 
 data class PlanWrapper(
     val plan: Plan,
@@ -157,7 +187,12 @@ class PlanViewHolder(var binding: ItemPlanBinding, val model: MainModel) :
     }
 
     fun onClick(position: Int, item: Plan) {
-        Toast.makeText(containerView.context, "$position clicked", Toast.LENGTH_SHORT).show()
+        binding.root.context.let {
+            it.startActivity(Intent(it, PlanActivity::class.java).also { intent ->
+                intent.putExtra(PlanViewModel.PLAN_TO_EDIT, item)
+            })
+        }
+
     }
 }
 
@@ -166,7 +201,6 @@ class PlanViewHolder(var binding: ItemPlanBinding, val model: MainModel) :
 fun RecyclerView.bindItem0(plans: ObservableList<Plan>) {
     (this.adapter as PlanAdapter?)?.setItem(plans, PlanAdapter.PLANS_TODAY)
 }
-
 
 
 @BindingAdapter("bindItem1")
@@ -186,12 +220,11 @@ fun RecyclerView.bindItem3(plans: ObservableList<Plan>) {
 }
 
 
-
 @BindingAdapter("strikeThrough")
 fun TextView.bindStrikeThrough(enable: Boolean) {
     if (enable) {
         this.paintFlags = this.paintFlags or STRIKE_THRU_TEXT_FLAG
-    }else{
+    } else {
         this.paintFlags = this.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
     }
 }
