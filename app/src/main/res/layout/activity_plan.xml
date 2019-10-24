@@ -19,13 +19,13 @@
         xmlns:tools="http://schemas.android.com/tools"
 
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context=".plan.PlanActivity">
+           >
 
             <TextView
                 android:layout_width="match_parent"
@@ -33,6 +33,15 @@
                 android:layout_margin="16dp"
                 android:text="New Todo"
                 android:textAlignment="center" />
+            <ImageView
+                android:padding="12dp"
+                android:onClick="@{()->vm.onClickDelete()}"
+                android:layout_width="wrap_content"
+                android:layout_gravity="right"
+                android:visibility="@{vm.plan.id!=``?View.VISIBLE:View.GONE}"
+                android:src="@drawable/ic_delete_forever_black_24dp"
+                android:tint="@color/grey"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/mTvPlanTitleTag"

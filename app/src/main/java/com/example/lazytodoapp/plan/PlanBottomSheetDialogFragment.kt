@@ -1,51 +1,67 @@
 package com.example.lazytodoapp.plan
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.*
-import com.example.lazytodoapp.R
+import android.view.LayoutInflater
+import android.widget.SeekBar
+import android.widget.TextView
+import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
 import com.example.lazytodoapp.UiActions
 import com.example.lazytodoapp.databinding.ActivityPlanBinding
+import com.example.lazytodoapp.main.MainActivity
 import com.example.lazytodoapp.main.Plan
 import com.example.lazytodoapp.main.RemotePlanRepository
 import com.example.lazytodoapp.tag
-import kotlinx.android.synthetic.main.activity_plan.*
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.android.synthetic.main.activity_plan.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PlanActivity : AppCompatActivity(), UiActions {
+class PlanBottomSheetDialogFragment : BottomSheetDialogFragment() {
+    private val viewModel = PlanViewModel(
+        object : UiActions {
+            override fun startActivity(intent: Intent) {
+                startActivity(intent)
+            }
 
-    lateinit var binding: ActivityPlanBinding
-    val viewModel = PlanViewModel(
-        this,
+            override fun finish() {
+                (activity as MainActivity?)?.refreshPlans()
+                dialog?.dismiss()
+            }
+
+        },
         PlanModel(RemotePlanRepository())
     )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_plan)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        val binding = ActivityPlanBinding.inflate(LayoutInflater.from(context))
         binding.vm = viewModel
+        val view = binding.root
+        dialog.setContentView(view)
 
-        if (intent.extras!=null){
-            val planToEdit = intent.getParcelableExtra<Plan>(PlanViewModel.PLAN_TO_EDIT)
-            viewModel.plan = (planToEdit)
+        arguments?.let { arguments ->
+            arguments.getParcelable<Plan>(PlanViewModel.PLAN_TO_EDIT)?.let { planToEdit ->
+                viewModel.plan = (planToEdit)
+            }
         }
 
-        mTvPlanDueDate.setOnClickListener {
+
+        view.mTvPlanDueDate.setOnClickListener {
             val cal = Calendar.getInstance()
 
             DatePickerDialog(
-                this,
+                requireContext(),
                 DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                     TimePickerDialog(
-                        this,
+                        context,
                         TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                             //                            val plan = viewModel.plan
                             val newCal = Calendar.getInstance()
@@ -69,7 +85,8 @@ class PlanActivity : AppCompatActivity(), UiActions {
             ).show()
         }
 
-        mChipGroupDueDate.setOnCheckedChangeListener { chipGroup, i ->
+
+        view.mChipGroupDueDate.setOnCheckedChangeListener { chipGroup, i ->
             val index = i - 1
             val prev = viewModel.dueDateSelection.indexOf(true)
             val prevDate = viewModel.plan.dueDate
@@ -80,10 +97,11 @@ class PlanActivity : AppCompatActivity(), UiActions {
             if (index == PlanViewModel.DUE_CUSTOM) {
                 val cal = Calendar.getInstance()
                 DatePickerDialog(
-                    this,
+
+                    requireContext(),
                     DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                         TimePickerDialog(
-                            this,
+                            context,
                             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                                 //                            val plan = viewModel.plan
                                 val newCal = Calendar.getInstance()
@@ -100,7 +118,7 @@ class PlanActivity : AppCompatActivity(), UiActions {
                             0,
                             true
                         ).apply {
-                            this.setOnCancelListener {
+                            setOnCancelListener {
                                 Log.i(tag(), "chipgroup setOnCancelListener")
                                 viewModel.onSelectDueDate(prev, prevDate)
                             }
@@ -110,8 +128,7 @@ class PlanActivity : AppCompatActivity(), UiActions {
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)
                 ).apply {
-                    this.setOnCancelListener {
-
+                    setOnCancelListener {
                         Log.i(tag(), "chipgroup setOnCancelListener")
                         viewModel.onSelectDueDate(prev, prevDate)
                     }
@@ -122,8 +139,11 @@ class PlanActivity : AppCompatActivity(), UiActions {
 
 
         }
+
+        return dialog
     }
 }
+
 
 @BindingAdapter("onDateChange")
 fun TextView.onDateChange(date: Date?) {

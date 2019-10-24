@@ -4,8 +4,6 @@ import android.os.Parcelable
 import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableList
 import androidx.databinding.library.baseAdapters.BR
 import com.example.lazytodoapp.tag
 import com.google.android.gms.tasks.Task
@@ -18,7 +16,6 @@ import com.google.firebase.firestore.SetOptions
 import io.reactivex.Completable
 import io.reactivex.Single
 import kotlinx.android.parcel.Parcelize
-import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -54,6 +51,7 @@ interface PlanRepository {
     fun getPlans(date: Date): Single<List<Plan>>
     fun createPlan(plan: Plan): Single<Plan>
     fun checkPlan(plan: Plan): Completable
+    fun deletePlan(plan: Plan): Completable
 }
 
 class RemotePlanRepository : PlanRepository {
@@ -74,6 +72,16 @@ class RemotePlanRepository : PlanRepository {
             .set(planWithId, SetOptions.merge())
             .rx()
             .andThen(Single.just(planWithId))
+    }
+
+    override fun deletePlan(plan: Plan):Completable{
+        return if (plan.id.isEmpty()){
+            Completable.complete()
+        }else{
+            db.collection(USER).document(getUser().uid).collection(PLAN).document(plan.id)
+                .delete()
+                .rx()
+        }
     }
 
     companion object {

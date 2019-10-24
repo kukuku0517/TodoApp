@@ -1,28 +1,25 @@
 package com.example.lazytodoapp.main.adapter
 
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.graphics.Paint
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableList
 import androidx.recyclerview.widget.RecyclerView
+import com.example.lazytodoapp.R
 import com.example.lazytodoapp.databinding.ItemPlanBinding
+import com.example.lazytodoapp.main.MainActivity
 import com.example.lazytodoapp.main.MainModel
 import com.example.lazytodoapp.main.Plan
 import com.example.lazytodoapp.plan.PlanItemViewModel
 import com.example.lazytodoapp.tag
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_plan_title.view.*
-import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
-import android.graphics.Paint
-import com.example.lazytodoapp.R
-import com.example.lazytodoapp.plan.PlanActivity
-import com.example.lazytodoapp.plan.PlanViewModel
 
 
 class PlanAdapter(val model: MainModel) : RecyclerView.Adapter<PlanBaseViewHolder>() {
@@ -141,13 +138,13 @@ open class BasePlan
 
 class PlanTitle(
     val title: String
-) : BasePlan(){
+) : BasePlan() {
     override fun equals(other: Any?): Boolean {
-      return if (other is PlanTitle){
-          this.title == other.title
-      }else{
-          super.equals(other)
-      }
+        return if (other is PlanTitle) {
+            this.title == other.title
+        } else {
+            super.equals(other)
+        }
     }
 
     override fun hashCode(): Int {
@@ -179,18 +176,17 @@ class PlanViewHolder(var binding: ItemPlanBinding, val model: MainModel) :
     PlanBaseViewHolder(binding.root) {
 
     override val containerView: View = binding.root
+    var viewModel: PlanItemViewModel? = null
 
     override fun bindView(position: Int, item: BasePlan) {
-        val viewModel = PlanItemViewModel(item as PlanWrapper, model)
+        viewModel = PlanItemViewModel(item as PlanWrapper, model)
         binding.vm = viewModel
         binding.notifyChange()
     }
 
     fun onClick(position: Int, item: Plan) {
         binding.root.context.let {
-            it.startActivity(Intent(it, PlanActivity::class.java).also { intent ->
-                intent.putExtra(PlanViewModel.PLAN_TO_EDIT, item)
-            })
+            (it as MainActivity).startPlanDialog(item)
         }
 
     }

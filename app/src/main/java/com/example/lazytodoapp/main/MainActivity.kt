@@ -1,17 +1,16 @@
 package com.example.lazytodoapp.main
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.databinding.BindingAdapter
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ObservableList
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.lazytodoapp.R
 import com.example.lazytodoapp.databinding.ActivityMainBinding
 import com.example.lazytodoapp.main.adapter.PlanAdapter
-import com.example.lazytodoapp.plan.PlanActivity
+import com.example.lazytodoapp.plan.PlanBottomSheetDialogFragment
+import com.example.lazytodoapp.plan.PlanViewModel
+import com.example.lazytodoapp.tag
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,18 +20,34 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding =
+            DataBindingUtil.setContentView(this, com.example.lazytodoapp.R.layout.activity_main)
         binding.vm = viewModel
         binding.mRvPlan.adapter = PlanAdapter(model)
         binding.mRvPlan.layoutManager = LinearLayoutManager(this)
         binding.mFabCreatePlan.setOnClickListener {
-            startActivity(Intent(this, PlanActivity::class.java))
+            startPlanDialog(null)
         }
-        viewModel.getPlans()
+        refreshPlans()
+    }
+
+    fun startPlanDialog(plan: Plan?) {
+        val mySheetDialog = PlanBottomSheetDialogFragment()
+        val fm = supportFragmentManager
+        plan?.let {
+            mySheetDialog.arguments =
+                Bundle().apply { putParcelable(PlanViewModel.PLAN_TO_EDIT, it) }
+        }
+        mySheetDialog.show(fm, "modalSheetDialog")
     }
 
     override fun onResume() {
         super.onResume()
+        Log.i(tag(), "onResume")
+
+    }
+
+    fun refreshPlans(){
         viewModel.getPlans()
     }
 }

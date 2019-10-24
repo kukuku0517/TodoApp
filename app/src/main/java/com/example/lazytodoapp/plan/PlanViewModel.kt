@@ -80,6 +80,13 @@ class PlanViewModel(
                 }
             )
     }
+
+    fun onClickDelete(){
+        model.deletePlan(plan)
+            .subscribeBy(
+                onComplete = {uiActions.finish()},
+                onError = {})
+    }
 }
 
 class PlanItemViewModel(
