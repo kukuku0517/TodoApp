@@ -10,6 +10,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.view.children
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
@@ -27,6 +29,10 @@ import java.util.*
 class PlanBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private val viewModel = PlanViewModel(
         object : UiActions {
+            override fun toast(msg: String) {
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            }
+
             override fun startActivity(intent: Intent) {
                 startActivity(intent)
             }
@@ -87,7 +93,16 @@ class PlanBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
 
         view.mChipGroupDueDate.setOnCheckedChangeListener { chipGroup, i ->
-            val index = i - 1
+            var index = -1
+            chipGroup.children.forEachIndexed { idx, view ->
+                if (view.id == i) {
+                    index = idx
+                    return@forEachIndexed
+                }
+            }
+            if (index == -1) return@setOnCheckedChangeListener
+
+
             val prev = viewModel.dueDateSelection.indexOf(true)
             val prevDate = viewModel.plan.dueDate
             Log.i(tag(), "mChipGroupDueDate $index prev: $prev ${prevDate.toString()}")

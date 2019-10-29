@@ -7,6 +7,11 @@
             name="vm"
             type="com.example.lazytodoapp.main.MainViewModel" />
 
+
+        <variable
+            name="planViewModel"
+            type="com.example.lazytodoapp.plan.PlanViewModel" />
+
         <import type="android.view.View" />
     </data>
 
@@ -22,9 +27,9 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/mToolbarMain"
-                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -73,11 +78,17 @@
                 android:id="@+id/mFabCreatePlan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:backgroundTint="@color/colorPrimary"
                 android:layout_margin="16dp"
                 android:src="@drawable/ic_mode_edit_black_24dp"
+                app:backgroundTint="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <include
+                bind:vm="@{planViewModel}"
+                layout="@layout/activity_plan" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -5,4 +5,5 @@ import android.content.Intent
 interface UiActions {
     fun startActivity(intent: Intent)
     fun finish()
+    fun toast(msg: String)
 }

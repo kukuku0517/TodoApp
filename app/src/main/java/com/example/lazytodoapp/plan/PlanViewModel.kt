@@ -67,36 +67,40 @@ class PlanViewModel(
     }
 
     fun onSubmit() {
+        if (plan.title.isEmpty()) {
+            uiActions.toast("제목을 입력하세요")
+        } else {
+            model.postPlan(plan)
+                .doOnSubscribe { isLoading.set(true) }
+                .subscribeBy(
+                    onSuccess = {
+                        isLoading.set(false)
+                        uiActions.finish()
+                    },
+                    onError = {
+                        isLoading.set(false)
+                    }
+                )
+        }
 
-        model.postPlan(plan)
-            .doOnSubscribe { isLoading.set(true) }
-            .subscribeBy(
-                onSuccess = {
-                    isLoading.set(false)
-                    uiActions.finish()
-                },
-                onError = {
-                    isLoading.set(false)
-                }
-            )
     }
 
-    fun onClickDelete(){
+    fun onClickDelete() {
         model.deletePlan(plan)
             .subscribeBy(
-                onComplete = {uiActions.finish()},
+                onComplete = { uiActions.finish() },
                 onError = {})
     }
 }
 
 class PlanItemViewModel(
-    val planWrapper : PlanWrapper,
+    val planWrapper: PlanWrapper,
     val model: MainModel
 ) {
     val plan = planWrapper.plan
 
     fun onCheck(isChecked: Boolean) {
-        if (plan.isChecked != isChecked){
+        if (plan.isChecked != isChecked) {
             model.checkPlan(plan.copy(_isChecked = isChecked))
                 .subscribeBy(onComplete = {
                     plan.isChecked = isChecked
